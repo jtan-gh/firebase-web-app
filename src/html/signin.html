@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In</title>
+</head>
+<body>
+    <h1>Sign In</h1>
+    <form id="signin-form">
+        <input type="email" id="email" placeholder="Email" required />
+        <input type="password" id="password" placeholder="Password" required />
+        <button type="submit">Sign In</button>
+    </form>
+
+    <script>
+        document.getElementById('signin-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                // Send credentials to the backend for sign-in
+                const response = await fetch('/signin', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email, password }),
+                });
+
+                if (response.ok) {
+                    console.log('User signed in successfully');
+                    // Optionally redirect to protected page
+                    window.location.href = '/protected'; // Redirect to the protected page
+                } else {
+                    const errorData = await response.json();
+                    console.error('Failed to sign in:', errorData);
+                }
+            } catch (error) {
+                console.error('Error during sign in:', error);
+            }
+        });
+    </script>
+</body>
+</html>
