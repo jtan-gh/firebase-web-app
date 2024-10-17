@@ -33,12 +33,12 @@ const authenticate = async (req, res, next) => {
 };
 
 app.get("/protected", authenticate, (req, res) => {
-  res.send(`<h1>Protected Page</h1><p>Welcome ${req.user.email}</p>`);
+  res.sendFile(path.resolve(__dirname, "../html/signout.html"));
 });
 
 //routes
 app.get("/", async (req, res) => {
-  res.json("hello world");
+  res.sendFile(path.resolve(__dirname, "../html/index.html"));
 });
 
 app.get("/signup", (req, res) => {

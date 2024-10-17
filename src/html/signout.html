@@ -1,25 +1,33 @@
 <!-- public/signout.html -->
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sign Out</title>
-</head>
-<body>
-  <h1>Sign Out</h1>
-  <button id="signoutButton">Sign Out</button>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign Out</title>
+  </head>
+  <body>
+    <h1>Sign Out</h1>
+    <button id="signoutButton">Sign Out</button>
 
-  <script>
-    document.getElementById("signoutButton").addEventListener("click", async () => {
-      const response = await fetch("/signout", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-      });
+    <script>
+      document
+        .getElementById("signoutButton")
+        .addEventListener("click", async () => {
+          const response = await fetch("/signout", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+          });
 
-      const result = await response.json();
-      alert(result.message || result.error);
-    });
-  </script>
-</body>
+          const result = await response.json();
+          if (response.ok) {
+            console.log("User signed out successfully");
+            window.location.href = "/";
+          } else {
+            const errorData = await response.json();
+            console.error("Failed to sign in:", errorData);
+          }
+        });
+    </script>
+  </body>
 </html>
