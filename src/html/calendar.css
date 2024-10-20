@@ -8,3 +8,24 @@
     cursor: pointer
   }
 }
+
+
+.fc-event-1::before {
+  content: '...';
+  display: inline-block;
+  width: 8px; /* Width of the dot */
+  height: 8px; /* Height of the dot */
+  border-radius: 50%; /* Make it circular */
+  background-color: blue; /* Color for Meeting 1 */
+  margin-right: 8px; /* Space between dot and text */
+}
+
+.fc-event-2::before {
+  content: '...';
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: green; /* Color for Meeting 2 */
+  margin-right: 8px;
+}
