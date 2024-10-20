@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FullCalendar Example with Conflicts</title>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
+    <link
+      href="https://unpkg.com/@fullcalendar/core/main.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://unpkg.com/@fullcalendar/daygrid/main.css"
+      rel="stylesheet"
+    />
+
+    <script src="https://unpkg.com/@fullcalendar/core/main.js"></script>
+    <script src="https://unpkg.com/@fullcalendar/daygrid/main.js"></script>
+    <link rel="stylesheet" href="calendar.css" />
+  </head>
+  <body>
+    <div id="calendar"></div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const calendarEl = document.getElementById("calendar");
+
+        const events = [
+          {
+            title: "Meeting 1",
+            start: "2024-10-21T10:30:00",
+            end: "2024-10-21T12:30:00",
+            id: "1",
+          },
+          {
+            title: "Meeting 2",
+            start: "2024-10-21T11:30:00",
+            end: "2024-10-21T12:00:00",
+            id: "2",
+          },
+          {
+            title: "Meeting 3",
+            start: "2024-10-21T13:00:00",
+            end: "2024-10-21T14:00:00",
+            id: "3",
+          },
+        ];
+
+        // Function to check for conflicts
+        function checkConflict(event1, event2) {
+          return event1.start < event2.end && event1.end > event2.start;
+        }
+
+        // Function to highlight conflicting events
+        function highlightConflicts(events) {
+          const conflictEvents = [];
+          for (let i = 0; i < events.length; i++) {
+            for (let j = i + 1; j < events.length; j++) {
+              if (checkConflict(events[i], events[j])) {
+                console.log(
+                  `Conflict detected between: ${events[i].title} and ${events[j].title}`
+                );
+                conflictEvents.push(events[i]);
+                conflictEvents.push(events[j]);
+              }
+            }
+          }
+          return conflictEvents;
+        }
+
+        // Log the events before processing
+        console.log("Events:", events);
+        const conflictEvents = highlightConflicts(events);
+        const conflictEventIds = new Set(
+          conflictEvents.map((event) => event.id)
+        );
+        console.log("Conflict Event IDs:", Array.from(conflictEventIds));
+
+        const calendar = new FullCalendar.Calendar(calendarEl, {
+          initialView: "dayGridMonth",
+          events: events,
+          eventDidMount: function (info) {
+            const isConflict = conflictEventIds.has(info.event.id);
+            if (isConflict) {
+              // Apply background and border colors directly to the event element
+              info.el.style.color = "red";
+              info.el.style.border = "2px solid red";
+            }
+          },
+          eventContent: function (arg) {
+            const startTime = arg.event.start.toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            });
+            const endTime = arg.event.end
+              ? arg.event.end.toLocaleTimeString([], {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })
+              : "";
+            return { html: `${startTime} - ${endTime} ${arg.event.title}` };
+          },
+        });
+
+        calendar.render(); // Render the calendar
+      });
+    </script>
+  </body>
+</html>

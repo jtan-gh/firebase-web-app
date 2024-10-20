@@ -1,0 +1,10 @@
+.fc-event {
+  white-space: nowrap; /* Prevents wrapping */
+  overflow: hidden; /* Hides the overflow */
+  text-overflow: ellipsis !important; /* Adds an ellipsis (...) at the end */
+
+  &:hover {
+    opacity: 0.5;
+    cursor: pointer
+  }
+}
