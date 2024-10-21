@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Modal Example</title>
+  <style>
+    /* Modal styles */
+    .modal {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    /* Prompt styles */
+    .prompt {
+      background-color: white;
+      padding: 20px;
+      border-radius: 5px;
+      width: 300px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <!-- Outer div for the modal -->
+  <div class="modal" id="modal">
+    <!-- Inner div for the prompt -->
+    <div class="prompt" id="prompt">
+      <p>This is a prompt. Click outside to close.</p>
+    </div>
+  </div>
+
+  <script>
+    // Get references to the modal and prompt elements
+    const modal = document.getElementById('modal');
+    const prompt = document.getElementById('prompt');
+
+    // Add a click event listener to the modal
+    modal.addEventListener('click', (event) => {
+      // Check if the click is outside the prompt
+      if (!prompt.contains(event.target)) {
+        // Close the modal
+        modal.style.display = 'none';
+      }
+    });
+  </script>
+</body>
+</html>

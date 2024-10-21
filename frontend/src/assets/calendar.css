@@ -1,0 +1,21 @@
+.fc-event {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis !important;
+
+  &:hover {
+    opacity: 0.5;
+    cursor: pointer
+  }
+}
+
+
+.fc-event::before {
+  content: '\00a0\00a0\00a0';
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: green;
+  margin-right: 8px;
+}

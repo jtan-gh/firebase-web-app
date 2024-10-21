@@ -1,9 +1,10 @@
 const path = require("path");
 require("dotenv").config({ path: path.resolve(__dirname, "../../.env") });
 const express = require("express");
+const cors = require("cors");
 const bodyParser = require("body-parser");
-const { admin, signin } = require("../firebase/firebase");
 const cookieParser = require("cookie-parser");
+const { admin, signin } = require("../firebase/firebase");
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -11,6 +12,11 @@ const PORT = process.env.PORT || 8080;
 // Middleware to parse JSON request bodies
 app.use(bodyParser.json());
 app.use(cookieParser());
+app.use(cors({
+  origin: 'http://localhost:5173',
+  credentials: true,
+  
+}))
 
 const authenticate = async (req, res, next) => {
   console.log("req.cookies", req.cookies);
@@ -38,7 +44,7 @@ app.get("/protected", authenticate, (req, res) => {
 
 //routes
 app.get("/", async (req, res) => {
-  res.sendFile(path.resolve(__dirname, "../html/index.html"));
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
 app.get("/signup", (req, res) => {
@@ -53,7 +59,7 @@ app.get("/signout", (req, res) => {
   res.sendFile(path.resolve(__dirname, "../html/signout.html"));
 });
 
-app.post("/signup", async (req, res) => {
+app.post("/api/signup", async (req, res) => {
   const { email, password } = req.body;
   try {
     const userRecord = await admin.auth().createUser({ email, password });
@@ -66,7 +72,7 @@ app.post("/signup", async (req, res) => {
   }
 });
 
-app.post("/signin", async (req, res) => {
+app.post("/api/signin", async (req, res) => {
   const { email, password } = req.body;
 
   try {
@@ -74,7 +80,11 @@ app.post("/signin", async (req, res) => {
     const user = await signin(email, password);
     const idToken = user.idToken;
 
-    res.cookie("session", idToken, { httpOnly: true });
+    res.cookie("session", idToken, { 
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
+      sameSite: 'None' // This might be necessary if you are running on different domains
+    });
     res.status(200).send({ message: "User signed in and session created." });
   } catch (error) {
     console.error("Error signing in:", error);
@@ -82,7 +92,7 @@ app.post("/signin", async (req, res) => {
   }
 });
 
-app.post("/signout", (req, res) => {
+app.post("/api/signout", (req, res) => {
   res.clearCookie("session");
   res.status(200).json({ message: "Logout successful!" });
 });

@@ -1,6 +1,5 @@
-/* Modal styles */
 .modal {
-  display: none;
+  display: block;
   position: fixed;
   z-index: 1000;
   left: 0;
@@ -16,7 +15,8 @@
   margin: 15% auto;
   padding: 20px;
   border: 1px solid #888;
-  width: 300px;
+  width: fit-content;
+  height: fit-content;
 }
 
 .close {
